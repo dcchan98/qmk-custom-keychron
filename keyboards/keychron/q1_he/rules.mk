@@ -1,4 +1,4 @@
-
+COMBO_ENABLE = yes
 JOYSTICK_ENABLE = yes
 JOYSTICK_DRIVER = digital
 # Inscrease stack size to avoid crushing of eeprom_update_block()
