@@ -87,18 +87,10 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
 #endif // ENCODER_MAP_ENABLE
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    if (keycode == KC_BSPC && record->event.pressed) {
-        // Change behavior of mod tap command + delete to delete word instead of a whole line. Similar to windows
-        if (get_mods() & MOD_BIT(KC_RGUI)) {
-            unregister_mods(MOD_BIT(KC_RGUI));
-            register_code(KC_LALT);
-            tap_code(KC_BSPC);
-            unregister_code(KC_LALT);
-            register_mods(MOD_BIT(KC_RGUI));
-            return false; // don't send normal backspace
-        }
+    if (!process_record_keychron_common(keycode, record)) {
+        return false;
     }
-    return true; // normal behavior otherwise
+    return true;
 }
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
