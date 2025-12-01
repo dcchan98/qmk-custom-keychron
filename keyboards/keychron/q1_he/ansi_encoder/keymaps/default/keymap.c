@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_FN] = LAYOUT_ansi_82(
         _______,  KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,   KC_F11,   KC_F12,   _______,            RGB_TOG,
         _______,  BT_HST1,  BT_HST2,  BT_HST3,  P2P4G,    _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,            _______,
-        RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  LCTL(LSFT(KC_TAB)),  LCTL(KC_TAB),  _______,  _______,  _______,  _______,            _______,
+        RGB_TOG,  RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  LGUI(LALT(KC_LEFT)), LGUI(LALT(KC_RIGHT)),  _______,  _______,  _______,  _______,            _______,
         _______,  RGB_RMOD, RGB_VAD,  RGB_HUD,  RGB_SAD,  RGB_SPD,  KC_LEFT,  KC_DOWN,  KC_UP,    KC_RGHT,  _______,  _______,            _______,            KC_END,
         _______,            _______,  _______,  _______,  _______,  BAT_LVL,  NK_TOGG,  _______,  _______,  _______,  _______,            _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,  _______,  _______,  _______,  _______),
@@ -94,13 +94,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
-    switch(combo_index) {
-        case SD_WIN_FN:
+    switch (combo_index) {
+        case SD_WIN_FN: {
+            // Detect which base layer Keychron selected
+            uint8_t base = get_highest_layer(default_layer_state);
+
             if (pressed) {
-                layer_on(WIN_FN);  // Turn on WIN_FN when combo is pressed
+                if (base == MAC_BASE) {
+                    layer_on(MAC_FN);
+                } else {
+                    layer_on(WIN_FN);
+                }
             } else {
-                layer_off(WIN_FN); // Turn off WIN_FN when combo is released
+                layer_off(MAC_FN);
+                layer_off(WIN_FN);
             }
-            break;
+        } break;
     }
 }
